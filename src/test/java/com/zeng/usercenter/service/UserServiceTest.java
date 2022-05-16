@@ -7,29 +7,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-//进行简单的测试
 @SpringBootTest
 class UserServiceTest {
 
-    @Autowired
-    private UserService userService;
 
+    @Resource
+    public UserService userService;
     @Test
-    void insertTest()
+    void test()
     {
         User user = new User();
-        user.setUserName("dsa");
-        user.setUserAccount("dsd");
-        user.setAvatarUrl("dsad");
+        user.setUserName("sas");
+        user.setUserAccount("sasa");
+        user.setAvatarUrl("sasad");
         user.setGender(0);
-        user.setUserPassword("sada");
-        user.setPhone("sa");
-        user.setEmail("aa");
+        user.setUserPassword("dsad");
+        user.setPhone("asdsa");
+        user.setEmail("asdsad");
         user.setUserStatus(0);
         user.setIsDelete(0);
-        boolean result = userService.save(user);
-        assertTrue(result);
+        userService.save(user);
+
     }
 }

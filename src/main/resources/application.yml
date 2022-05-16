@@ -8,5 +8,6 @@ spring:
     password: root
 server:
   port: 8080
-
-
+mybatis:
+  mapper-locations: classpath*:com/zeng/usercenter/mapper/*.xml
+  type-aliases-package: com.zeng.usercenter.model.domain
