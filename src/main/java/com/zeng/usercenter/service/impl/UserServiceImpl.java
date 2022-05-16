@@ -1,9 +1,9 @@
-package com.zeng.usercenter.service.service.impl;
+package com.zeng.usercenter.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zeng.usercenter.service.service.UserService;
+import com.zeng.usercenter.service.UserService;
 import com.zeng.usercenter.model.domain.User;
-import com.zeng.usercenter.mapper.mapper.UserMapper;
+import com.zeng.usercenter.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,8 +12,7 @@ import org.springframework.stereotype.Service;
 * @createDate 2022-05-16 15:15:23
 */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>
-    implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
 }
 

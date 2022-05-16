@@ -1,4 +1,4 @@
-package com.zeng.usercenter.service.service;
+package com.zeng.usercenter.service;
 
 import com.zeng.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;

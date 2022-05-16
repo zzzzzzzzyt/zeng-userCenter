@@ -1,4 +1,4 @@
-package com.zeng.usercenter.mapper.mapper;
+package com.zeng.usercenter.mapper;
 
 import com.zeng.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2022-05-16 15:15:23
 * @Entity generator.domain.User
 */
+
 public interface UserMapper extends BaseMapper<User> {
 
 }
