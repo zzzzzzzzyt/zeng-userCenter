@@ -1,6 +1,12 @@
 spring:
   application:
     name: user-center
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/zeng
+    username: root
+    password: root
 server:
   port: 8080
+
 
