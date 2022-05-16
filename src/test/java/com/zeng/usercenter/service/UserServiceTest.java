@@ -27,7 +27,7 @@ class UserServiceTest {
         user.setEmail("asdsad");
         user.setUserStatus(0);
         user.setIsDelete(0);
-        userService.save(user);
-
+        boolean result = userService.save(user);
+        System.out.println();
     }
 }

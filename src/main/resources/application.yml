@@ -3,11 +3,11 @@ spring:
     name: user-center
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/zeng
+    url: jdbc:mysql://localhost:3306/zeng?serverTimezone=UTC
     username: root
     password: root
 server:
   port: 8080
 mybatis:
-  mapper-locations: classpath*:com/zeng/usercenter/mapper/*.xml
+  mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zeng.usercenter.model.domain
