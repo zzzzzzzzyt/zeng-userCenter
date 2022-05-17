@@ -1,6 +1,7 @@
 package com.zeng.usercenter.service;
 
 import com.zeng.usercenter.model.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +13,7 @@ import javax.annotation.Resource;
 class UserServiceTest {
 
 
-    @Resource
+    @Autowired
     public UserService userService;
     @Test
     void test()
@@ -28,6 +29,7 @@ class UserServiceTest {
         user.setUserStatus(0);
         user.setIsDelete(0);
         boolean result = userService.save(user);
+        Assertions.assertTrue(result);
         System.out.println();
     }
 }

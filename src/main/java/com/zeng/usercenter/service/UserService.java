@@ -9,5 +9,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2022-05-16 16:30:05
 */
 public interface UserService extends IService<User> {
-
+    //在接口中 方法默认是public
+    long userRegistry(String userAccount,String userPassword,String checkPassword);
 }
