@@ -1,5 +1,7 @@
 package com.zeng.usercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zeng.usercenter.model.domain.User;
 import com.zeng.usercenter.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,4 +42,14 @@ class UserServiceImplTest {
         checkPassword  = "zengzeng";
         Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
     }
+
+
+    @Test
+    void testDelete()
+    {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",1);
+        Assertions.assertTrue(userService.remove(queryWrapper));
+    }
+
 }
