@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.zeng.usercenter.constants.UserConstant.*;
 
@@ -65,8 +66,12 @@ public class UserController {
             return new ArrayList<>();
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("user_name",username);
-        return userService.list(queryWrapper);
+        if (StringUtils.isNoneBlank(username))
+        {
+            queryWrapper.like("user_name",username);
+        }
+        List<User> list = userService.list(queryWrapper);
+        return list.stream().map(user -> userService.getSafeUser(user)).collect(Collectors.toList());
     }
 
 

@@ -111,10 +111,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return null;
         }
         //如果到这了 就带真正意义上得到了相应的对象 进行数据的脱敏
+        User safeUser = getSafeUser(user);
+        //存入对应的session  也就是进行用户封装态的确定
+        HttpSession session = request.getSession();
+        session.setAttribute(USER_LOGIN_STATUS,safeUser);
+        return safeUser;
+    }
+
+
+    /**
+     * 进行用户脱敏
+     * @param user
+     * @return
+     */
+    public User getSafeUser(User user)
+    {
         User safeUser = new User();
         safeUser.setId(user.getId());
         safeUser.setUserName(user.getUserName());
         safeUser.setUserAccount(user.getUserAccount());
+        safeUser.setUserPassword("");
         safeUser.setAvatarUrl(user.getAvatarUrl());
         safeUser.setGender(user.getGender());
         safeUser.setPhone(user.getPhone());
@@ -123,9 +139,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safeUser.setUserStatus(user.getUserStatus());
         safeUser.setCreateTime(user.getCreateTime());
         safeUser.setUpdateTime(user.getUpdateTime());
-        //存入对应的session  也就是进行用户封装态的确定
-        HttpSession session = request.getSession();
-        session.setAttribute(USER_LOGIN_STATUS,safeUser);
         return safeUser;
     }
 }

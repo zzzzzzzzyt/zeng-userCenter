@@ -2,9 +2,8 @@ package com.zeng.usercenter.service;
 
 import com.zeng.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-
 import javax.servlet.http.HttpServletRequest;
+
 
 /**
 * @author asus
@@ -16,4 +15,6 @@ public interface UserService extends IService<User> {
     long userRegistry(String userAccount,String userPassword,String checkPassword);
     //用户登录
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    //用户脱敏
+    User getSafeUser(User user);
 }
