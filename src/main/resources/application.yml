@@ -6,8 +6,11 @@ spring:
     url: jdbc:mysql://localhost:3306/zeng?serverTimezone=UTC
     username: root
     password: root
+  session:
+    timeout: 86400
 server:
   port: 8080
+  servlet:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zeng.usercenter.model.domain

@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.zeng.usercenter.constants.UserConstant.USER_LOGIN_STATUS;
 
 /**
 * @author 祝英台炸油条
@@ -36,7 +39,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 用户登录态键
      */
-    private static final String USER_LOGIN_STATUS = "userLoginStatus";
+
     @Resource
     private UserMapper userMapper;
 
@@ -56,7 +59,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //用户的密码长度不能小于8位
         if(userPassword.length()<8)return -1;
         //账户不包括特殊字符
-
         Matcher matcher = Pattern.compile(ILLEGAL_PATTERN).matcher(userAccount);
         if (matcher.find())return -1;
         //密码和校验密码相同
@@ -122,11 +124,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safeUser.setCreateTime(user.getCreateTime());
         safeUser.setUpdateTime(user.getUpdateTime());
         //存入对应的session  也就是进行用户封装态的确定
-        request.getSession().setAttribute(USER_LOGIN_STATUS,user);
+        HttpSession session = request.getSession();
+        session.setAttribute(USER_LOGIN_STATUS,safeUser);
         return safeUser;
     }
-
-
 }
 
 
