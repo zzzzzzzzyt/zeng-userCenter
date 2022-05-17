@@ -1,8 +1,17 @@
 package com.zeng.usercenter.controller;
 
+import com.zeng.usercenter.model.domain.User;
+import com.zeng.usercenter.model.request.UserLoginRequest;
+import com.zeng.usercenter.model.request.UserRegisterRequest;
+import com.zeng.usercenter.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户接口 前端请求获取相应的json或者返回值  在前端上进行显示
@@ -13,10 +22,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
 
+    @Resource
+    private UserService userService;
+
     @PostMapping("/register")
-    public long register()
+    public long register(@RequestBody UserRegisterRequest userRegisterRequest)
     {
-        //todo 等等
+        String userAccount = userRegisterRequest.getUserAccount();
+        String userPassword = userRegisterRequest.getUserPassword();
+        String checkPassword = userRegisterRequest.getCheckPassword();
+
+        return userService.userRegistry(userAccount, userPassword, checkPassword);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request)
+    {
+        String userAccount = userLoginRequest.getUserAccount();
+        String userPassword = userLoginRequest.getUserPassword();
+        //进行简单的测试
+        if (StringUtils.isAnyBlank(userAccount,userPassword))return null;
+        return userService.userLogin(userAccount, userPassword,request);
     }
 
 

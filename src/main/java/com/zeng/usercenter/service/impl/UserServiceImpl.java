@@ -99,8 +99,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (matcher.find())return null;
         //进入数据库进行查询  查询是否存在相应的对象
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes(StandardCharsets.UTF_8));
         queryWrapper.eq("user_account",userAccount);
-        queryWrapper.eq("user_password",userPassword);
+        queryWrapper.eq("user_password",encryptPassword);
         User user = userMapper.selectOne(queryWrapper);
         if (user==null)
         {
@@ -116,6 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         safeUser.setGender(user.getGender());
         safeUser.setPhone(user.getPhone());
         safeUser.setEmail(user.getEmail());
+        safeUser.setUserRole(user.getUserRole());
         safeUser.setUserStatus(user.getUserStatus());
         safeUser.setCreateTime(user.getCreateTime());
         safeUser.setUpdateTime(user.getUpdateTime());

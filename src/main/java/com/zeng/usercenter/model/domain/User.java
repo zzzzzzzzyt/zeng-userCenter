@@ -35,6 +35,11 @@ public class User implements Serializable {
     private String avatarUrl;
 
     /**
+     * 用户角色
+     */
+    private int userRole;
+
+    /**
      * 性别
      */
     private Integer gender;
