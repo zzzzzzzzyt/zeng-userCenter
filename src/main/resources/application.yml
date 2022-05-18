@@ -8,9 +8,11 @@ spring:
     password: root
   session:
     timeout: 86400
+
 server:
   port: 8080
   servlet:
+    context-path: /api
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.zeng.usercenter.model.domain

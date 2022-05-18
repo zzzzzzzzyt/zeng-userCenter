@@ -7,6 +7,7 @@ import com.zeng.usercenter.model.request.UserRegisterRequest;
 import com.zeng.usercenter.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -14,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.zeng.usercenter.constants.UserConstant.*;
+import static com.zeng.usercenter.constants.UserConstant.ADMIN_ROLE;
+import static com.zeng.usercenter.constants.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * 用户接口 前端请求获取相应的json或者返回值  在前端上进行显示
@@ -78,6 +80,7 @@ public class UserController {
     /**
      * 删除对应用户
      */
+    //todo 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
     @PostMapping("/delete")
     public boolean deleteUser(@RequestBody long id,HttpServletRequest request)
     {
