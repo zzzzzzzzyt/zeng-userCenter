@@ -1,17 +1,19 @@
 package com.zeng.usercenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zeng.usercenter.common.BaseResponse;
+import com.zeng.usercenter.common.ErrorCode;
+import com.zeng.usercenter.common.ResultUtils;
+import com.zeng.usercenter.exception.BusinessException;
 import com.zeng.usercenter.model.domain.User;
 import com.zeng.usercenter.model.request.UserLoginRequest;
 import com.zeng.usercenter.model.request.UserRegisterRequest;
 import com.zeng.usercenter.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,26 +36,32 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    public long registerUser(@RequestBody UserRegisterRequest userRegisterRequest)
+    public BaseResponse<Long> registerUser(@RequestBody UserRegisterRequest userRegisterRequest)
     {
+        if (userRegisterRequest==null)
+        {
+            throw new BusinessException(ErrorCode.NULL_ERROR,"请求request为空");
+        }
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
         String planetCode = userRegisterRequest.getPlanetCode();
-        return userService.userRegistry(userAccount, userPassword, checkPassword,planetCode);
+        long userID = userService.userRegistry(userAccount, userPassword, checkPassword, planetCode);
+        return ResultUtils.success(userID);
     }
 
     /**
      * 用户登录
      */
     @PostMapping("/login")
-    public User loginUser(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request)
+    public BaseResponse<User> loginUser(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request)
     {
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         //进行简单的测试
-        if (StringUtils.isAnyBlank(userAccount,userPassword))return null;
-        return userService.userLogin(userAccount, userPassword,request);
+        if (StringUtils.isAnyBlank(userAccount,userPassword))throw new BusinessException(ErrorCode.NULL_ERROR,"请求参数为空");
+        User user = userService.userLogin(userAccount, userPassword, request);
+        return ResultUtils.success(user);
     }
 
 
@@ -61,12 +69,12 @@ public class UserController {
      * 搜索对应用户
      */
     @GetMapping("/search")
-    public List<User> searchUser(String username,HttpServletRequest request)
+    public BaseResponse<List<User>> searchUser(String username,HttpServletRequest request)
     {
         //搜索之前要进行鉴权 如果鉴权失败 则返回空
         if (!isAdmin(request))
         {
-            return new ArrayList<>();
+            throw new BusinessException(ErrorCode.NO_AUTH,"非管理员无权限");
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNoneBlank(username))
@@ -74,7 +82,8 @@ public class UserController {
             queryWrapper.like("user_name",username);
         }
         List<User> list = userService.list(queryWrapper);
-        return list.stream().map(user -> userService.getSafeUser(user)).collect(Collectors.toList());
+        List<User> userCollect = list.stream().map(user -> userService.getSafeUser(user)).collect(Collectors.toList());
+        return ResultUtils.success(userCollect);
     }
 
 
@@ -84,14 +93,15 @@ public class UserController {
      * @return 返回脱敏过后的用户对应信息
      */
     @GetMapping("/current")
-    public User getCurrentUser(HttpServletRequest request)
+    public BaseResponse<User> getCurrentUser(HttpServletRequest request)
     {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
-        if (userObj ==null)return null;
+        if (userObj ==null)throw new BusinessException(ErrorCode.NOT_LOGIN,"暂未登录");
         User currentUser = (User) userObj;
         //TODO 这边还是需要判断用户是否合法
         User user = userService.getById(currentUser.getId());
-        return userService.getSafeUser(user);
+        User safeUser = userService.getSafeUser(user);
+        return ResultUtils.success(safeUser);
     }
 
 
@@ -100,22 +110,23 @@ public class UserController {
      */
     //TODO 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
     @PostMapping("/delete")
-    public boolean deleteUser(@RequestBody long id,HttpServletRequest request)
+    public BaseResponse<Boolean> deleteUser(@RequestBody long id,HttpServletRequest request)
     {
-        //同样需要鉴权
-        if (!isAdmin(request)) return false;
-        if (id<0)return false;
-        return userService.removeById(id);
+        if (!isAdmin(request)) throw new BusinessException(ErrorCode.NO_AUTH,"非管理员无权限");;
+        if (id<0)throw new BusinessException(ErrorCode.PARAM_ERROR,"请求参数错误");;
+        boolean isDelete = userService.removeById(id);
+        return ResultUtils.success(isDelete);
     }
 
     /**
      * 用户登录
      */
     @PostMapping("/logout")
-    public Integer logoutUser(HttpServletRequest request)
+    public BaseResponse<Integer> logoutUser(HttpServletRequest request)
     {
-        if (request==null)return null;
-        return userService.userLogout(request);
+        if (request==null)throw new BusinessException(ErrorCode.NULL_ERROR,"request为null");
+        Integer userLogout = userService.userLogout(request);
+        return ResultUtils.success(userLogout);
     }
 
     //判断用户是否为管理员
