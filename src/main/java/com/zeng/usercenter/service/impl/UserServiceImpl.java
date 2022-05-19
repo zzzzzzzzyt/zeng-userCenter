@@ -126,6 +126,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     public User getSafeUser(User user)
     {
+        //注意要判空
+        if (user==null)return null;
         User safeUser = new User();
         safeUser.setId(user.getId());
         safeUser.setUserName(user.getUserName());

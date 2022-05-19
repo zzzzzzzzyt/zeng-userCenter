@@ -78,9 +78,26 @@ public class UserController {
 
 
     /**
+     * 获取当前用户信息
+     * @param request 请求
+     * @return 返回脱敏过后的用户对应信息
+     */
+    @GetMapping("/current")
+    public User getCurrentUser(HttpServletRequest request)
+    {
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
+        if (userObj==null)return null;
+        User currentUser = (User) userObj;
+        //TODO 这边还是需要判断用户是否合法
+        User user = userService.getById(currentUser.getId());
+        return userService.getSafeUser(user);
+    }
+
+
+    /**
      * 删除对应用户
      */
-    //todo 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
+    //TODO 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
     @PostMapping("/delete")
     public boolean deleteUser(@RequestBody long id,HttpServletRequest request)
     {
