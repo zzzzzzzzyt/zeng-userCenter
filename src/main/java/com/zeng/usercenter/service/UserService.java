@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 */
 public interface UserService extends IService<User> {
     //用户注册
-    long userRegistry(String userAccount,String userPassword,String checkPassword);
+    long userRegistry(String userAccount,String userPassword,String checkPassword,String planetCode);
     //用户登录
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
     //用户脱敏
     User getSafeUser(User user);
+    //删除用户，删除用户态
+    Integer userLogout(HttpServletRequest request);
 }

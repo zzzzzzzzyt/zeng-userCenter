@@ -20,27 +20,28 @@ class UserServiceImplTest {
         String userAccount = "asc";
         String userPassword = "dsadsadsad";
         String checkPassword = "dsadsadsad";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
+        String planetCode = "1";
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
         userAccount = "zeng";
         userPassword = "zeng";
         checkPassword  = "zeng";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
         userAccount = "sasa";
         userPassword = "zengzeng";
         checkPassword  = "zengzeng";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
         userAccount = "ze./¡£¡¢ng";
         userPassword = "zengzeng";
         checkPassword  = "zengzeng";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
         userAccount = "zeng";
         userPassword = "zengzeng";
         checkPassword  = "zengzdsng";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
-        userAccount = "zeng";
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
+        userAccount = "zytzytz";
         userPassword = "zengzeng";
         checkPassword  = "zengzeng";
-        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword),-1);
+        Assertions.assertEquals(userService.userRegistry(userAccount,userPassword,checkPassword,planetCode),-1);
     }
 
 

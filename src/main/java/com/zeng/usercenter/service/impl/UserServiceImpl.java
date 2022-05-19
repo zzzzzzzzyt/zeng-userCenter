@@ -48,31 +48,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param userAccount 用户账户
      * @param userPassword 用户密码
      * @param checkPassword 重复输入的密码
+     * @param planetCode 星球编号
      * @return 返回用户id
      */
     @Override
-    public long userRegistry(String userAccount, String userPassword, String checkPassword) {
+    public long userRegistry(String userAccount, String userPassword, String checkPassword,String planetCode) {
         //引入方法进行校验 对应的字段们是否为空
-        if (StringUtils.isAnyBlank(userAccount,userPassword,checkPassword)) return -1;
+        if (StringUtils.isAnyBlank(userAccount,userPassword,checkPassword,planetCode)) return -1;
+
         //用户的账户长度不能小于4位
         if (userAccount.length()<4)return -1;
+
         //用户的密码长度不能小于8位
         if(userPassword.length()<8)return -1;
+
+        //验证星球编号 不能大于5 如果大于5则返回
+        if (planetCode.length()>5)return -1;
+
         //账户不包括特殊字符
         Matcher matcher = Pattern.compile(ILLEGAL_PATTERN).matcher(userAccount);
         if (matcher.find())return -1;
+
         //密码和校验密码相同
         if (!userPassword.equals(checkPassword))return -1;
+
         //账户不能重复  就是需要进行查询了
         QueryWrapper<User> userQueryWrapper = new QueryWrapper<>();
         userQueryWrapper.eq("user_account",userAccount);
         if (userMapper.selectCount(userQueryWrapper)>0) return -1;
+
+        //星球编号不能重复
+        userQueryWrapper = new QueryWrapper<>();
+        userQueryWrapper.eq("planet_code",planetCode);
+        if (userMapper.selectCount(userQueryWrapper)>0) return -1;
+
         //对密码进行加盐加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes(StandardCharsets.UTF_8));
         //插入数据
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(encryptPassword);
+        user.setPlanetCode(planetCode);
         //必须插入成功
         if (!this.save(user)) {
             return -1;
@@ -121,27 +137,38 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 进行用户脱敏
-     * @param user
+     * @param originUser
      * @return
      */
-    public User getSafeUser(User user)
+    public User getSafeUser(User originUser)
     {
         //注意要判空
-        if (user==null)return null;
+        if (originUser==null)return null;
         User safeUser = new User();
-        safeUser.setId(user.getId());
-        safeUser.setUserName(user.getUserName());
-        safeUser.setUserAccount(user.getUserAccount());
+        safeUser.setId(originUser.getId());
+        safeUser.setUserName(originUser.getUserName());
+        safeUser.setUserAccount(originUser.getUserAccount());
         safeUser.setUserPassword("");
-        safeUser.setAvatarUrl(user.getAvatarUrl());
-        safeUser.setGender(user.getGender());
-        safeUser.setPhone(user.getPhone());
-        safeUser.setEmail(user.getEmail());
-        safeUser.setUserRole(user.getUserRole());
-        safeUser.setUserStatus(user.getUserStatus());
-        safeUser.setCreateTime(user.getCreateTime());
-        safeUser.setUpdateTime(user.getUpdateTime());
+        safeUser.setAvatarUrl(originUser.getAvatarUrl());
+        safeUser.setGender(originUser.getGender());
+        safeUser.setPhone(originUser.getPhone());
+        safeUser.setEmail(originUser.getEmail());
+        safeUser.setPlanetCode(originUser.getPlanetCode());
+        safeUser.setUserRole(originUser.getUserRole());
+        safeUser.setUserStatus(originUser.getUserStatus());
+        safeUser.setCreateTime(originUser.getCreateTime());
+        safeUser.setUpdateTime(originUser.getUpdateTime());
         return safeUser;
+    }
+
+    /**
+     * 删除用户登录状态
+     * @param request 用户请求
+     */
+    @Override
+    public Integer userLogout(HttpServletRequest request) {
+        request.getSession().removeAttribute(USER_LOGIN_STATUS);
+        return 1;
     }
 }
 

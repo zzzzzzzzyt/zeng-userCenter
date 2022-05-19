@@ -39,7 +39,8 @@ public class UserController {
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
-        return userService.userRegistry(userAccount, userPassword, checkPassword);
+        String planetCode = userRegisterRequest.getPlanetCode();
+        return userService.userRegistry(userAccount, userPassword, checkPassword,planetCode);
     }
 
     /**
@@ -86,7 +87,7 @@ public class UserController {
     public User getCurrentUser(HttpServletRequest request)
     {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
-        if (userObj==null)return null;
+        if (userObj ==null)return null;
         User currentUser = (User) userObj;
         //TODO 这边还是需要判断用户是否合法
         User user = userService.getById(currentUser.getId());
@@ -107,6 +108,17 @@ public class UserController {
         return userService.removeById(id);
     }
 
+    /**
+     * 用户登录
+     */
+    @PostMapping("/logout")
+    public Integer logoutUser(HttpServletRequest request)
+    {
+        if (request==null)return null;
+        return userService.userLogout(request);
+    }
+
+    //判断用户是否为管理员
     private boolean isAdmin(HttpServletRequest request)
     {
         HttpSession session = request.getSession();
