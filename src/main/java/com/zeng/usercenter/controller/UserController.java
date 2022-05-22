@@ -11,6 +11,7 @@ import com.zeng.usercenter.model.request.UserRegisterRequest;
 import com.zeng.usercenter.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import static com.zeng.usercenter.constants.UserConstant.USER_LOGIN_STATUS;
 
 /**
  * 用户接口 前端请求获取相应的json或者返回值  在前端上进行显示
+ *
  * @Author 祝英台炸油条
  * @Date 2022 05 17 14 48
  **/
@@ -36,11 +38,9 @@ public class UserController {
      * 用户注册
      */
     @PostMapping("/register")
-    public BaseResponse<Long> registerUser(@RequestBody UserRegisterRequest userRegisterRequest)
-    {
-        if (userRegisterRequest==null)
-        {
-            throw new BusinessException(ErrorCode.NULL_ERROR,"请求request为空");
+    public BaseResponse<Long> registerUser(@RequestBody UserRegisterRequest userRegisterRequest) {
+        if (userRegisterRequest == null) {
+            throw new BusinessException(ErrorCode.NULL_ERROR, "请求request为空");
         }
         String userAccount = userRegisterRequest.getUserAccount();
         String userPassword = userRegisterRequest.getUserPassword();
@@ -54,12 +54,12 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/login")
-    public BaseResponse<User> loginUser(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request)
-    {
+    public BaseResponse<User> loginUser(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         //进行简单的测试
-        if (StringUtils.isAnyBlank(userAccount,userPassword))throw new BusinessException(ErrorCode.NULL_ERROR,"请求参数为空");
+        if (StringUtils.isAnyBlank(userAccount, userPassword))
+            throw new BusinessException(ErrorCode.NULL_ERROR, "请求参数为空");
         User user = userService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(user);
     }
@@ -69,17 +69,14 @@ public class UserController {
      * 搜索对应用户
      */
     @GetMapping("/search")
-    public BaseResponse<List<User>> searchUser(String username,HttpServletRequest request)
-    {
+    public BaseResponse<List<User>> searchUser(String username, HttpServletRequest request) {
         //搜索之前要进行鉴权 如果鉴权失败 则返回空
-        if (!isAdmin(request))
-        {
-            throw new BusinessException(ErrorCode.NO_AUTH,"非管理员无权限");
+        if (!isAdmin(request)) {
+            throw new BusinessException(ErrorCode.NO_AUTH, "非管理员无权限");
         }
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNoneBlank(username))
-        {
-            queryWrapper.like("user_name",username);
+        if (StringUtils.isNoneBlank(username)) {
+            queryWrapper.like("user_name", username);
         }
         List<User> list = userService.list(queryWrapper);
         List<User> userCollect = list.stream().map(user -> userService.getSafeUser(user)).collect(Collectors.toList());
@@ -89,14 +86,14 @@ public class UserController {
 
     /**
      * 获取当前用户信息
+     *
      * @param request 请求
      * @return 返回脱敏过后的用户对应信息
      */
     @GetMapping("/current")
-    public BaseResponse<User> getCurrentUser(HttpServletRequest request)
-    {
+    public BaseResponse<User> getCurrentUser(HttpServletRequest request) {
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATUS);
-        if (userObj ==null)throw new BusinessException(ErrorCode.NOT_LOGIN,"暂未登录");
+        if (userObj == null) throw new BusinessException(ErrorCode.NOT_LOGIN, "暂未登录");
         User currentUser = (User) userObj;
         //TODO 这边还是需要判断用户是否合法
         User user = userService.getById(currentUser.getId());
@@ -110,10 +107,11 @@ public class UserController {
      */
     //TODO 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteUser(@RequestBody long id,HttpServletRequest request)
-    {
-        if (!isAdmin(request)) throw new BusinessException(ErrorCode.NO_AUTH,"非管理员无权限");;
-        if (id<0)throw new BusinessException(ErrorCode.PARAM_ERROR,"请求参数错误");;
+    public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request) {
+        if (!isAdmin(request)) throw new BusinessException(ErrorCode.NO_AUTH, "非管理员无权限");
+        ;
+        if (id < 0) throw new BusinessException(ErrorCode.PARAM_ERROR, "请求参数错误");
+        ;
         boolean isDelete = userService.removeById(id);
         return ResultUtils.success(isDelete);
     }
@@ -122,19 +120,17 @@ public class UserController {
      * 用户登录
      */
     @PostMapping("/logout")
-    public BaseResponse<Integer> logoutUser(HttpServletRequest request)
-    {
-        if (request==null)throw new BusinessException(ErrorCode.NULL_ERROR,"request为null");
+    public BaseResponse<Integer> logoutUser(HttpServletRequest request) {
+        if (request == null) throw new BusinessException(ErrorCode.NULL_ERROR, "request为null");
         Integer userLogout = userService.userLogout(request);
         return ResultUtils.success(userLogout);
     }
 
     //判断用户是否为管理员
-    private boolean isAdmin(HttpServletRequest request)
-    {
+    private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object userObj = session.getAttribute(USER_LOGIN_STATUS);
-        User user =(User)userObj;
+        User user = (User) userObj;
         return user != null && user.getUserRole() == ADMIN_ROLE;
     }
 }

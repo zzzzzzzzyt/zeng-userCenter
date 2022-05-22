@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 /**
  * 用户登录时候传来的请求类
+ *
  * @Author 祝英台炸油条
  * @Date 2022 05 17 15 06
  **/

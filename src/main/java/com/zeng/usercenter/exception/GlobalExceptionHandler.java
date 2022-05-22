@@ -20,26 +20,26 @@ public class GlobalExceptionHandler {
 
     /**
      * 自定义异常处理类
+     *
      * @param e
      * @return
      */
     @ExceptionHandler(BusinessException.class)
-    public BaseResponse BusinessExceptionHandler(BusinessException e)
-    {
-        log.error("businessException:"+e.getMessage(),e);
-        return ResultUtils.error(e.getCode(),e.getMessage(),e.getDescription());
+    public BaseResponse BusinessExceptionHandler(BusinessException e) {
+        log.error("businessException:" + e.getMessage(), e);
+        return ResultUtils.error(e.getCode(), e.getMessage(), e.getDescription());
     }
 
     /**
      * 系统运行时异常处理类
+     *
      * @param e
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
-    public BaseResponse RuntimeExceptionHandler(RuntimeException e)
-    {
-        log.error("runtimeException",e);
-        return ResultUtils.error(ErrorCode.SYSTEM_ERROR,e.getMessage(),"");
+    public BaseResponse RuntimeExceptionHandler(RuntimeException e) {
+        log.error("runtimeException", e);
+        return ResultUtils.error(ErrorCode.SYSTEM_ERROR, e.getMessage(), "");
     }
 
 
