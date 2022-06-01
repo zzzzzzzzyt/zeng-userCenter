@@ -91,10 +91,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAM_ERROR, "数据库中已存在相应账号");
         }
 
-        //星球编号长度 不能超过5位
-        if (planetCode.length() > 5) {
-            throw new BusinessException(ErrorCode.PARAM_ERROR, "星球编号过长");
-        }
 
         //星球编号不能重复
         userQueryWrapper = new QueryWrapper<>();
