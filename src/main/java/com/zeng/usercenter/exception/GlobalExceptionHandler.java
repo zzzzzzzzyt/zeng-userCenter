@@ -21,8 +21,6 @@ public class GlobalExceptionHandler {
     /**
      * 自定义异常处理类
      *
-     * @param e
-     * @return
      */
     @ExceptionHandler(BusinessException.class)
     public BaseResponse BusinessExceptionHandler(BusinessException e) {
@@ -32,9 +30,6 @@ public class GlobalExceptionHandler {
 
     /**
      * 系统运行时异常处理类
-     *
-     * @param e
-     * @return
      */
     @ExceptionHandler(RuntimeException.class)
     public BaseResponse RuntimeExceptionHandler(RuntimeException e) {
