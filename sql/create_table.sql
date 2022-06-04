@@ -25,7 +25,7 @@ create table rpc_monitor
 (
     id                 bigint auto_increment comment 'id'
         primary key,
-    method_name        varchar(256)                       null comment '方法名',
+    method_name        varchar(256)  default 'visitor'                    null comment '方法名',
     method_description varchar(1024)                      null comment '方法描述',
     call_num           int      default 0                 not null comment '状态 0-正常',
     call_time          datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间'
