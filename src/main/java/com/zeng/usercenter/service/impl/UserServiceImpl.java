@@ -154,8 +154,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 进行用户脱敏
      *
-     * @param originUser
-     * @return
      */
     public User getSafeUser(User originUser) {
         //注意要判空
