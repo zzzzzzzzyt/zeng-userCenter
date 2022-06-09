@@ -105,13 +105,11 @@ public class UserController {
     /**
      * 删除对应用户
      */
-    //TODO 这边有点问题 删除尚未实现  看看鱼皮怎么改 我是想直接换成get
-    @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteUser(@RequestBody long id, HttpServletRequest request) {
-        if (!isAdmin(request)) throw new BusinessException(ErrorCode.NO_AUTH, "非管理员无权限");
-        if (id < 0) throw new BusinessException(ErrorCode.PARAM_ERROR, "请求参数错误");
-        boolean isDelete = userService.removeById(id);
-        return ResultUtils.success(isDelete);
+
+    @GetMapping("/deleteUser")
+    public BaseResponse<User>  deleteUser(@RequestParam(value="id") int id){
+        userService.removeById(id);
+        return ResultUtils.success(null);
     }
 
     /**
