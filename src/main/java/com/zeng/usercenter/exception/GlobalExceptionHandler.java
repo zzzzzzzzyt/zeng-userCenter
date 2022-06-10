@@ -20,7 +20,6 @@ public class GlobalExceptionHandler {
 
     /**
      * 自定义异常处理类
-     *
      */
     @ExceptionHandler(BusinessException.class)
     public BaseResponse BusinessExceptionHandler(BusinessException e) {

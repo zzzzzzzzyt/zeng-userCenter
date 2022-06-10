@@ -107,7 +107,7 @@ public class UserController {
      */
 
     @GetMapping("/deleteUser")
-    public BaseResponse<User>  deleteUser(@RequestParam(value="id") int id){
+    public BaseResponse<User> deleteUser(@RequestParam(value = "id") int id) {
         userService.removeById(id);
         return ResultUtils.success(null);
     }
